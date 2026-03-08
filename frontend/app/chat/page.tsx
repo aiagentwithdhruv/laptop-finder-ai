@@ -159,7 +159,7 @@ function ChatContent() {
               }`}
             >
               {msg.role === "assistant" ? (
-                <div className="prose prose-invert prose-sm max-w-none">
+                <div className="chat-markdown text-sm max-w-none">
                   <ReactMarkdown>{msg.content || "..."}</ReactMarkdown>
                 </div>
               ) : (

@@ -19,3 +19,88 @@ body {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+/* Chat markdown styling */
+.chat-markdown h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  color: var(--fg);
+}
+
+.chat-markdown h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-top: 0.75rem;
+  margin-bottom: 0.25rem;
+  color: var(--fg);
+}
+
+.chat-markdown p {
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+  color: var(--fg);
+}
+
+.chat-markdown strong {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.chat-markdown ul {
+  margin: 0.25rem 0 0.5rem 0;
+  padding-left: 1.25rem;
+  list-style-type: disc;
+}
+
+.chat-markdown ul li {
+  margin-bottom: 0.25rem;
+  line-height: 1.5;
+  color: var(--fg);
+}
+
+.chat-markdown hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 1rem 0;
+}
+
+.chat-markdown table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.75rem 0;
+  font-size: 0.85rem;
+}
+
+.chat-markdown table th {
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 2px solid var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.chat-markdown table td {
+  padding: 0.4rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--fg);
+}
+
+.chat-markdown table tr:last-child td {
+  border-bottom: none;
+}
+
+.chat-markdown code {
+  background: var(--bg);
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.85em;
+}
+
+.chat-markdown blockquote {
+  border-left: 3px solid var(--accent);
+  padding-left: 0.75rem;
+  margin: 0.5rem 0;
+  color: var(--muted);
+}
