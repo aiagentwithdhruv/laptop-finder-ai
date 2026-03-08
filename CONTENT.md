@@ -51,6 +51,9 @@ I open-sourced everything — the app, the rules, and the deployment guide.
 The era of "AI can't write production code" is over.
 You just need better instructions.
 
+Want to learn how to build production AI systems like this?
+I teach RAG, agents, full-stack AI, and deployment at euron.one — join 2200+ engineers already learning.
+
 #AIEngineering #ClaudeCode #BuildInPublic #RAG #FullStack #n8n #OpenSource
 ```
 
@@ -84,6 +87,10 @@ The AI coding rules repo has:
 • One-liner install script
 
 Star the repos if this is useful ⭐
+
+🎓 Want to build AI systems like this from scratch?
+I teach RAG, agents, full-stack AI, and production deployment at euron.one
+→ 2200+ engineers enrolled. Next cohort open now.
 ```
 
 ---
@@ -157,6 +164,13 @@ Everything is open source:
 
 AI can write production code.
 You just need better instructions.
+
+Tweet 11 (Reply):
+Want to learn how to build RAG, agents, and full-stack AI systems like this?
+
+I teach it all at euron.one — 2200+ engineers already learning.
+
+From architecture to deployment. Production-grade.
 ```
 
 ---
