@@ -6,6 +6,8 @@
 
 ![Home Page](screenshots/home-page.jpg)
 
+![Architecture Overview](screenshots/architecture-handdrawn.png)
+
 ---
 
 ## What It Does
