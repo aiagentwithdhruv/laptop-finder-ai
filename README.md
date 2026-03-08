@@ -260,6 +260,71 @@ Render free tier spins down after 15 minutes of inactivity. The included n8n wor
 
 ---
 
+## Deployment Options & Cost Comparison
+
+Not sure which hosting to pick? Here's a real-world breakdown:
+
+| Option | Frontend | Backend | Database | Monthly Cost | Best For |
+|--------|----------|---------|----------|:------------:|----------|
+| **Vercel + Render** (this repo) | Vercel Free | Render Free | Render PostgreSQL Free | **$0** | Side projects, portfolios, demos |
+| **Vercel + Railway** | Vercel Free | Railway Hobby ($5) | Railway PostgreSQL | **~$5-10** | Low-traffic apps, no cold starts |
+| **Vercel + Fly.io** | Vercel Free | Fly.io (3 free VMs) | Fly Postgres (1GB free) | **$0-5** | Global edge, low latency |
+| **AWS (ECS Fargate)** | S3 + CloudFront | ECS Fargate | RDS PostgreSQL | **~$35-50** | Production, custom domains, scaling |
+| **AWS (EC2)** | Same EC2 | Same EC2 | Same EC2 or RDS | **~$15-25** | Full control, single-server setup |
+| **VPS (Hetzner/DigitalOcean)** | Nginx reverse proxy | PM2/systemd | PostgreSQL on VPS | **~$5-12** | Budget production, full control |
+
+> **What we use:** Vercel (frontend) + Render free tier (backend + DB) + n8n keep-alive = **$0/month** + ~$0.01-0.05 per AI chat query (OpenAI API).
+
+### The Catch With Free Tiers
+
+| Platform | Free Tier Limits | Gotcha |
+|----------|-----------------|--------|
+| **Render** | 750 hrs/month, spins down after 15 min | Cold starts take 30-60 seconds (fix: n8n keep-alive) |
+| **Vercel** | 100GB bandwidth, 100 deploys/day | No backend — frontend only |
+| **Railway** | $5 credit/month, then pay-as-you-go | Credit runs out fast with always-on services |
+| **Fly.io** | 3 shared VMs, 1GB persistent storage | Postgres eats into free VM allocation |
+| **Supabase** | 500MB DB, 2 projects | No custom backend hosting — DB only |
+
+### Deploy on AWS (Production Grade)
+
+For production workloads, we deployed a similar full-stack AI app ([Conversa AI](https://github.com/aiagentwithdhruv/conversa-ai)) on AWS ECS Fargate. The same architecture works for this project.
+
+**AWS Architecture:**
+```
+Route 53 (DNS)
+    ↓
+CloudFront (CDN)
+    ↓
+ALB (Application Load Balancer)
+    ├── /api/*  → ECS Fargate (Backend)
+    └── /*      → S3 (Frontend) or Vercel
+                     ↓
+              RDS PostgreSQL + pgvector
+              ElastiCache Redis (optional)
+```
+
+**AWS Services & Costs:**
+
+| Service | Spec | Monthly Cost |
+|---------|------|:------------:|
+| ECS Fargate | 0.5 vCPU, 1GB RAM | ~$15 |
+| RDS PostgreSQL | db.t3.micro, 20GB | ~$15 |
+| ALB | Application Load Balancer | ~$16 |
+| ECR | Container registry (1GB free) | ~$0 |
+| CloudWatch | Logs (30-day retention) | ~$1-3 |
+| S3 + CloudFront | Frontend hosting | ~$1-2 |
+| ElastiCache Redis | cache.t3.micro (optional) | ~$12 |
+| **Total** | | **~$35-50/mo** |
+
+**Reference implementation:** Check [conversa-ai](https://github.com/aiagentwithdhruv/conversa-ai) — it has the full AWS setup:
+- `infrastructure/setup-aws.sh` — Complete AWS infrastructure script (VPC, subnets, security groups, ECS, ALB, CloudWatch)
+- `infrastructure/task-definition.json` — ECS Fargate task definition
+- `.github/workflows/deploy.yml` — GitHub Actions CI/CD (push → build → ECR → ECS, zero-downtime)
+
+> **Pro tip:** Start with Vercel + Render (free). Move to AWS only when you need custom scaling, SLA guarantees, or enterprise clients. We ran Conversa AI on AWS at ~$35-40/mo before shutting it down — free tier is fine for most AI side projects.
+
+---
+
 ## n8n Use Cases (Beyond Keep-Alive)
 
 n8n is a powerful workflow automation tool that pairs well with AI apps. Here are real use cases nobody talks about:
