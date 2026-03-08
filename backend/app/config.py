@@ -22,4 +22,9 @@ class Settings(BaseSettings):
 def get_settings() -> Settings:
     settings = Settings()
     assert settings.database_url, "DATABASE_URL is required"
+    # Render provides postgresql:// but asyncpg needs postgresql+asyncpg://
+    if settings.database_url.startswith("postgresql://"):
+        settings.database_url = settings.database_url.replace(
+            "postgresql://", "postgresql+asyncpg://", 1
+        )
     return settings
