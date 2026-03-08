@@ -74,6 +74,15 @@ export default function ChatPage() {
               });
             } else if (data.type === "session") {
               setSessionId(data.session_id);
+            } else if (data.type === "error") {
+              setMessages((prev) => {
+                const updated = [...prev];
+                const last = updated[updated.length - 1];
+                if (last.role === "assistant") {
+                  last.content = data.content || "Something went wrong. Please try again.";
+                }
+                return [...updated];
+              });
             }
           } catch {
             // skip malformed JSON
