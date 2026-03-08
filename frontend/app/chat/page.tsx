@@ -1,8 +1,10 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { ChatMessage } from "@/types/chat";
-import { API_BASE } from "@/lib/api";
+import { API_BASE, apiFetch } from "@/lib/api";
+import { LaptopDetail } from "@/types/laptop";
 import ReactMarkdown from "react-markdown";
 
 const suggestions = [
@@ -15,15 +17,35 @@ const suggestions = [
 ];
 
 export default function ChatPage() {
+  return (
+    <Suspense fallback={<div className="max-w-4xl mx-auto px-4 py-8">Loading...</div>}>
+      <ChatContent />
+    </Suspense>
+  );
+}
+
+function ChatContent() {
+  const searchParams = useSearchParams();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const hasAutoSent = useRef(false);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  useEffect(() => {
+    const aboutId = searchParams.get("about");
+    if (aboutId && !hasAutoSent.current) {
+      hasAutoSent.current = true;
+      apiFetch<LaptopDetail>(`/laptops/${aboutId}`).then((laptop) => {
+        sendMessage(`Tell me about the ${laptop.brand} ${laptop.model}. What are its pros, cons, and who is it best for?`);
+      });
+    }
+  }, [searchParams]);
 
   async function sendMessage(text: string) {
     if (!text.trim() || isStreaming) return;
