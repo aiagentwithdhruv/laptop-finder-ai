@@ -1,13 +1,10 @@
 # Content Pack — LaptopFinder AI
 
-> Ready-to-post content for LinkedIn, YouTube, and Twitter/X.
-> Built with the [ai-coding-rules](https://github.com/aiagentwithdhruv/ai-coding-rules) framework.
+> Built with [ai-coding-rules](https://github.com/aiagentwithdhruv/ai-coding-rules) + [Claude Code](https://claude.ai/claude-code)
 
 ---
 
-## LinkedIn Posts
-
-### Post 1: The Build Story (Hero Post)
+## LinkedIn Post (Copy-Paste Ready)
 
 ```
 I built a full-stack AI product in one session.
@@ -19,317 +16,85 @@ Here's what came out:
 
 LaptopFinder AI — an AI-powered laptop recommendation engine.
 
-What it does:
 → Ask "best laptop for programming under $1500" in plain English
-→ AI searches 30+ laptops using RAG + pgvector
+→ RAG pipeline searches 30+ laptops using pgvector
 → Streams structured recommendations with specs, pros, and trade-offs
-→ Browse, filter, and compare laptops side-by-side
+→ Browse, filter, and compare side-by-side
 
 The stack:
-• Frontend: Next.js 15 + TypeScript + Tailwind
-• Backend: FastAPI + async SQLAlchemy + Pydantic
-• Database: PostgreSQL + pgvector (vector similarity search)
-• AI: OpenAI GPT-4o + text-embedding-3-small
-• Deployment: Vercel + Render — $0/month
+• Next.js 15 + TypeScript + Tailwind
+• FastAPI + async SQLAlchemy + Pydantic
+• PostgreSQL + pgvector (vector similarity search)
+• OpenAI GPT-4o + text-embedding-3-small
+• Deployed on Vercel + Render — $0/month
 
-The secret sauce?
+The secret? A CLAUDE.md file with 15 engineering rules:
 
-A CLAUDE.md file with 15 engineering rules that made the AI write production-grade code from the start:
-— Clean 3-layer architecture (routes → services → repos)
-— Typed schemas everywhere
-— Async I/O
-— Proper error handling
-— Centralized config
+Without rules → prototype-quality spaghetti code
+With rules → clean 3-layer architecture, typed schemas, async I/O, proper error handling
 
-Without these rules → you get prototype-quality spaghetti code.
-With these rules → you get deployable, maintainable code.
+The rules tell AI HOW to write code:
+— Routes handle HTTP only (zero business logic)
+— Services handle all business logic
+— Repositories handle all database access
+— Pydantic validates everything
+— Config is centralized, never hardcoded
 
-I open-sourced the rules: github.com/aiagentwithdhruv/ai-coding-rules
+I used an n8n workflow to keep Render's free tier alive (pings every 14 min).
 
-Live demo: laptopfinder.aiwithdhruv.com
-Full code: github.com/aiagentwithdhruv/laptop-finder-ai
+2 nodes. 30 seconds to set up. No cold starts.
+
+Total cost: $0 hosting + ~$0.01 per AI query.
+
+I open-sourced everything — the app, the rules, and the deployment guide.
 
 The era of "AI can't write production code" is over.
-You just need the right instructions.
+You just need better instructions.
 
-#AIEngineering #ClaudeCode #BuildInPublic #RAG #FullStack
+#AIEngineering #ClaudeCode #BuildInPublic #RAG #FullStack #n8n #OpenSource
 ```
 
-**Visuals:** Screenshot of homepage + screenshot of AI chat response side-by-side
+**Attach:** Homepage screenshot + AI chat screenshot (side-by-side or carousel)
 
 ---
 
-### Post 2: The Architecture Breakdown (Educational)
+## First Comment (Post Immediately After)
 
 ```
-How I architect every AI product — a 3-layer system that scales.
+All links:
 
-Most AI projects fail because they dump everything in one file.
-Here's the architecture I use for every production AI app:
+🔗 Live demo → laptopfinder.aiwithdhruv.com
+💻 Source code → github.com/aiagentwithdhruv/laptop-finder-ai
+📐 AI coding rules (15 rules for Claude + Cursor) → github.com/aiagentwithdhruv/ai-coding-rules
+☁️ AWS deployment reference → github.com/aiagentwithdhruv/conversa-ai
+🌐 Portfolio → aiwithdhruv.com
 
-Layer 1: Routes (HTTP only)
-→ Receives requests, validates input, returns responses
-→ ZERO business logic here
+What's in the repo:
+• Full README with architecture diagram
+• RAG system prompt (the exact prompt powering the AI chat)
+• Free deployment guide (Vercel + Render + n8n keep-alive)
+• Deployment cost comparison (6 options from $0 to $50/mo)
+• n8n workflow JSON — import and activate
+• AWS ECS Fargate guide with service-by-service cost breakdown
 
-Layer 2: Services (brain)
-→ All business logic lives here
-→ Orchestrates repos, calls AI, applies rules
+The AI coding rules repo has:
+• 15 production-grade .mdc rules for Cursor
+• Same rules as CLAUDE.md for Claude Code
+• 9 project doc templates (PRD, Architecture, API Spec, DB Schema, Deployment)
+• One-liner install script
 
-Layer 3: Repositories (database)
-→ All SQL/ORM queries here
-→ Services never touch the database directly
-
-For AI features, add a RAG layer:
-→ Ingestion: chunk documents → embed → store in pgvector
-→ Retrieval: embed query → similarity search → top K results
-→ Generation: context + query → stream LLM response
-
-This is exactly how LaptopFinder AI works:
-• User asks a question
-• Backend embeds the query (text-embedding-3-small)
-• pgvector finds the 8 most relevant laptop chunks
-• GPT-4o generates a structured recommendation
-• Response streams back via Server-Sent Events
-
-Result? Sub-second first token. Grounded answers. No hallucination.
-
-I teach these patterns in my open-source engineering rules:
-github.com/aiagentwithdhruv/ai-coding-rules
-
-15 rules. Works with Claude Code + Cursor.
-One file changes how AI writes your code.
-
-#SystemDesign #AIArchitecture #RAG #SoftwareEngineering
+Star the repos if this is useful ⭐
 ```
-
-**Visuals:** Architecture diagram from README (ASCII or hand-drawn via handdrawn-diagram skill)
-
----
-
-### Post 3: The $0 Deployment (Practical)
-
-```
-I deployed a full AI product for $0/month.
-
-Not a demo. Not localhost.
-A production app with a custom domain, AI chat, and a real database.
-
-Here's the exact setup:
-
-Frontend → Vercel (free)
-• Next.js auto-deploys on git push
-• Custom subdomain via CNAME record
-• 100GB bandwidth/month — more than enough
-
-Backend → Render (free)
-• FastAPI + PostgreSQL + pgvector
-• Auto-deploys from GitHub
-• Catch: spins down after 15 min inactivity
-
-The fix for Render cold starts?
-
-I created an n8n workflow that pings the API every 14 minutes.
-2 nodes. 30 seconds to set up. Problem solved.
-
-Schedule Trigger (every 14 min) → HTTP GET /laptops?limit=1
-
-The only cost: ~$0.01-0.05 per AI chat query (OpenAI API).
-At 100 queries/day, that's ~$3-5/month.
-
-Total: $0 hosting + $3-5 API costs.
-
-Most people think production AI apps need AWS ($50+/mo).
-For side projects and portfolios? Free tier is enough.
-
-Full deployment guide in the README:
-github.com/aiagentwithdhruv/laptop-finder-ai
-
-n8n keep-alive workflow included (just import and activate).
-
-What are you paying for hosting that should be free?
-
-#FreeHosting #n8n #Vercel #Render #DevOps #BuildInPublic
-```
-
-**Visuals:** Cost comparison table from README
-
----
-
-### Post 4: The RAG Prompt (Technical Deep Dive)
-
-```
-The prompt that makes my AI actually useful (not generic).
-
-Most AI chatbots give vague, hallucinated answers.
-Mine gives structured, grounded recommendations every time.
-
-The difference? 50 lines of system prompt engineering.
-
-Here's what I enforce:
-
-1. ONLY recommend from retrieved context
-→ No hallucinated laptop models
-→ If nothing matches, say so honestly
-
-2. Structured markdown output (strict)
-→ ### headings for each laptop
-→ Bold labels for specs
-→ Emoji for visual hierarchy (💰⚡🎮💼)
-→ Horizontal rules between recommendations
-
-3. Format template the LLM must follow:
-
-### 💻 [Brand Model]
-**💰 Price:** $X,XXX
-[Why it fits in 1-2 sentences]
-**Key Specs:** Processor, GPU, RAM, Storage, Display, Battery
-**✅ Pros:** 2-3 strengths
-**⚠️ Trade-off:** One honest limitation
-
-4. Comparison format with tables:
-
-| Feature | Laptop 1 | Laptop 2 |
-|---------|----------|----------|
-| Price   | $X,XXX   | $X,XXX   |
-
-**🏆 Verdict:** 1-2 sentence recommendation
-
-The result?
-Before: wall of unformatted text
-After: clean, scannable, actionable recommendations
-
-Full prompt in the repo:
-github.com/aiagentwithdhruv/laptop-finder-ai
-
-The prompt is in backend/app/rag/prompts.py
-
-Prompts are the new UI.
-
-#PromptEngineering #RAG #AI #LLM #GPT4o
-```
-
-**Visuals:** Before/after screenshot of AI chat formatting
-
----
-
-### Post 5: The n8n Secret (Unique Angle)
-
-```
-n8n use cases for AI apps that nobody talks about.
-
-Everyone knows n8n for email automation and CRM workflows.
-But it's secretly one of the best tools for AI app operations.
-
-Here are 6 real use cases I use:
-
-1. Keep-Alive for Free Hosting
-→ Render/Railway free tier spins down after 15 min
-→ n8n pings your API every 14 min
-→ 2 nodes. Zero cold starts. Problem solved.
-
-2. AI Response Quality Monitoring
-→ Send test queries every hour
-→ Check if RAG pipeline returns good results
-→ Alert on Slack/email if quality drops
-
-3. Automated Database Seeding
-→ Pull data from Google Sheets daily
-→ POST to your seed endpoint
-→ Always-fresh product data without manual work
-
-4. Cost Monitoring
-→ Check OpenAI usage API daily
-→ Calculate daily spend
-→ Alert if over budget (before the bill surprises you)
-
-5. User Query Analytics
-→ Log every chat query to Google Sheets
-→ Weekly summary email
-→ Know what users actually want → build that
-
-6. Review Aggregation
-→ Scrape reviews from Amazon/BestBuy
-→ Feed into your RAG system
-→ Fresh data = better recommendations
-
-I included the keep-alive workflow in my repo as a JSON file.
-Import it into n8n → change the URL → activate. Done.
-
-github.com/aiagentwithdhruv/laptop-finder-ai
-
-Most AI builders ignore operations.
-n8n makes it a 5-minute setup.
-
-#n8n #AIops #Automation #WorkflowAutomation #BuildInPublic
-```
-
-**Visuals:** n8n workflow screenshot (import the JSON and take one)
-
----
-
-### Post 6: AI Coding Rules (Cross-Promo)
-
-```
-I open-sourced the 15 rules that make AI write production code.
-
-Yesterday I published ai-coding-rules on GitHub.
-Today I built LaptopFinder AI using those exact rules.
-
-The difference is night and day:
-
-Without rules:
-❌ Business logic in route handlers
-❌ Raw SQL scattered everywhere
-❌ No error handling
-❌ Hardcoded config values
-❌ Spaghetti imports
-
-With rules:
-✅ Clean 3-layer architecture (routes → services → repos)
-✅ Typed Pydantic schemas
-✅ Centralized config + error handling
-✅ Async I/O everywhere
-✅ Production-grade from line one
-
-The rules cover:
-• FastAPI backend patterns
-• Next.js frontend patterns
-• PostgreSQL + migrations
-• RAG systems
-• API contracts
-• Security
-• Error handling + observability
-• DevOps + deployment
-
-Works with both Claude Code (CLAUDE.md) and Cursor (.mdc files).
-
-One-liner install:
-curl -fsSL https://raw.githubusercontent.com/aiagentwithdhruv/ai-coding-rules/main/install.sh | bash
-
-Or just copy the CLAUDE.md into your project root.
-
-Repo: github.com/aiagentwithdhruv/ai-coding-rules
-Proof it works: github.com/aiagentwithdhruv/laptop-finder-ai
-
-Stop fighting AI-generated code quality.
-Give it better instructions.
-
-#AIEngineering #ClaudeCode #CursorAI #OpenSource #DevTools
-```
-
-**Visuals:** Side-by-side of code without rules vs. with rules
 
 ---
 
 ## Twitter/X Thread
 
-### Thread: "I built a full AI product with 7 prompts"
-
 ```
 Tweet 1 (Hook):
 I built a full-stack AI product with 7 natural language prompts.
 
-No manual coding. No boilerplate. No copy-paste from Stack Overflow.
+No manual coding. No boilerplate.
 
 Here's the exact prompts I used 🧵
 
@@ -337,55 +102,48 @@ Tweet 2:
 Prompt 1 — Architecture:
 "Build a laptop recommendation system with AI chat. FastAPI + PostgreSQL + pgvector. Next.js frontend. Clean architecture — routes → services → repos."
 
-Claude Code generated the entire project structure, all models, schemas, and API routes.
+Claude Code generated the entire project structure.
 
 Tweet 3:
-Prompt 2 — Database + Seed Data:
+Prompt 2 — Database:
 "Create the schema with laptops, specs, reviews, embeddings. Seed 30 laptops across 6 categories."
 
-Got: Alembic migrations, full JSON seed data with realistic specs and prices.
+Got: Alembic migrations + full JSON seed data with realistic specs.
 
 Tweet 4:
 Prompt 3 — RAG Pipeline:
-"Build RAG — chunk laptop data, embed with text-embedding-3-small, store in pgvector, retrieve top 8, stream GPT-4o via SSE."
+"Chunk laptop data, embed with text-embedding-3-small, store in pgvector, retrieve top 8, stream GPT-4o via SSE."
 
-5 files generated: prompts.py, embeddings.py, retriever.py, ingestion.py, generator.py
+5 files generated. Full RAG pipeline.
 
 Tweet 5:
 Prompt 4 — Frontend:
-"Home page with hero + categories. Browse with filters. Laptop detail with specs. AI chat with streaming. Comparison page."
+"Home with hero + categories. Browse with filters. Detail page. AI chat with streaming. Comparison page."
 
-Full Next.js 15 app with TypeScript, Tailwind, dark theme, responsive.
+Full Next.js 15 app. TypeScript. Tailwind. Dark theme.
 
 Tweet 6:
 Prompt 5 — Deploy:
-"Deploy frontend to Vercel, backend to Render free tier. Custom domain."
+"Deploy to Vercel + Render free tier. Custom domain."
 
-Claude handled: render.yaml, Dockerfile, env vars, DNS CNAME setup.
+render.yaml, env vars, DNS — all handled.
 
 Tweet 7:
 Prompt 6 — Keep-Alive:
 "Render spins down after 15 min. Create n8n workflow to ping every 14 min."
 
-2-node workflow. Import JSON → activate → done.
+2 nodes. Done.
 
 Tweet 8:
 Prompt 7 — Polish:
 "Chat responses are unstructured. Fix the prompt + CSS."
 
-Claude rewrote the system prompt with markdown templates and styled the chat UI.
+Rewrote system prompt + styled markdown. Clean output.
 
 Tweet 9:
-The secret ingredient?
+The secret: a CLAUDE.md file with 15 engineering rules.
 
-A CLAUDE.md file with 15 engineering rules.
-
-It tells the AI HOW to write code:
-— Clean architecture
-— Typed schemas
-— Async patterns
-— Error handling
-— Production conventions
+It tells AI HOW to write code.
 
 Without it: prototype code.
 With it: deployable code.
@@ -393,180 +151,200 @@ With it: deployable code.
 Tweet 10:
 Everything is open source:
 
-🔗 Live demo: laptopfinder.aiwithdhruv.com
+🔗 Live: laptopfinder.aiwithdhruv.com
 🔗 Code: github.com/aiagentwithdhruv/laptop-finder-ai
-🔗 Engineering rules: github.com/aiagentwithdhruv/ai-coding-rules
+🔗 Rules: github.com/aiagentwithdhruv/ai-coding-rules
 
-The era of "AI can't write production code" is over.
+AI can write production code.
 You just need better instructions.
 ```
 
 ---
 
-## YouTube Video Script
+## YouTube Video Outline
 
-### Title Options:
-1. "I Built a Full AI Product with 7 Prompts (No Manual Coding)"
-2. "How I Use Claude Code to Ship Production AI Apps"
-3. "AI Coding Rules: The File That Makes AI Write Clean Code"
-4. "From Zero to Deployed: AI Product in One Session"
-
-### Outline:
+**Title:** "I Built a Full AI Product with 7 Prompts (No Manual Coding)"
 
 ```
 HOOK (0:00 - 0:30)
-"What if I told you this entire app — the frontend, backend,
-database, AI chat, deployment — was built with 7 natural
-language prompts? No manual coding. Let me show you."
-[Show live demo of laptopfinder.aiwithdhruv.com]
+[Show live demo] "This entire app was built with 7 prompts."
 
 THE PRODUCT (0:30 - 2:00)
-- Walk through the live app
-- Show homepage, browse, filters
-- Show laptop detail page
-- Demo the AI chat — ask a real question
-- Show the streaming response with structured formatting
-- Show the comparison feature
+Walk through: homepage → browse → filters → detail → AI chat → compare
 
 THE ARCHITECTURE (2:00 - 4:00)
-- Show the project structure in VS Code
-- Explain 3-layer architecture: routes → services → repos
-- Show the RAG pipeline: embed → search → generate
-- Explain pgvector for similarity search
-- Show SSE streaming code
+VS Code: 3-layer architecture + RAG pipeline + pgvector + SSE streaming
 
 THE 7 PROMPTS (4:00 - 8:00)
-- Go through each prompt:
-  1. Architecture setup
-  2. Database + seed data
-  3. RAG pipeline
-  4. Frontend
-  5. Deployment
-  6. n8n keep-alive
-  7. Chat formatting
-- Show before/after for each step
-- Highlight what Claude Code generated
+Show each prompt → what Claude Code generated → before/after
 
 THE SECRET: CLAUDE.md (8:00 - 10:00)
-- Show the CLAUDE.md file
-- Explain 15 engineering rules
-- Side-by-side: code without rules vs. with rules
-- "This one file changes everything"
-- Show ai-coding-rules GitHub repo
+Show the file. 15 rules. Side-by-side: code without vs. with rules.
 
 DEPLOYMENT (10:00 - 12:00)
-- Show Vercel deployment (60 seconds)
-- Show Render deployment
-- Show the n8n keep-alive workflow
-- Cost: $0/month + pennies for OpenAI
-- vs AWS at $35-50/month
+Vercel (60 sec) → Render → n8n keep-alive → $0/month vs AWS $35-50
 
 CTA (12:00 - 12:30)
-"Links in the description. Star the repos.
-Try the live demo. And if you want to build AI
-products like this — subscribe."
-
-LINKS:
-- Live: laptopfinder.aiwithdhruv.com
-- Code: github.com/aiagentwithdhruv/laptop-finder-ai
-- Rules: github.com/aiagentwithdhruv/ai-coding-rules
-- Portfolio: aiwithdhruv.com
+"Links in description. Star the repos. Subscribe."
 ```
 
----
-
-## Carousel Post (LinkedIn/Instagram)
-
-### Slide-by-Slide:
-
+**Description links:**
 ```
-Slide 1 (Cover):
-"I Built a Full AI Product
-With 7 Prompts"
-[Screenshot of the app]
-
-Slide 2:
-"The Stack"
-Frontend: Next.js 15
-Backend: FastAPI
-Database: PostgreSQL + pgvector
-AI: GPT-4o + RAG
-Cost: $0/month
-
-Slide 3:
-"Prompt 1: Architecture"
-→ 3-layer clean architecture
-→ Routes → Services → Repos
-→ Generated full project structure
-
-Slide 4:
-"Prompt 3: RAG Pipeline"
-→ Embed laptop data with text-embedding-3-small
-→ Store vectors in pgvector
-→ Retrieve top 8 matches
-→ Stream GPT-4o response
-
-Slide 5:
-"The Secret Sauce"
-A CLAUDE.md file with 15 rules
-that makes AI write production code
-→ Not prototype code
-→ Not tutorial code
-→ Production-grade, deployable code
-
-Slide 6:
-"Deployed for $0"
-Frontend → Vercel (free)
-Backend → Render (free)
-Keep-alive → n8n workflow
-Only cost: ~$0.01/query (OpenAI)
-
-Slide 7 (CTA):
-"Everything is open source"
-🔗 github.com/aiagentwithdhruv/laptop-finder-ai
-🔗 github.com/aiagentwithdhruv/ai-coding-rules
-[QR code or link]
+🔗 Live demo: https://laptopfinder.aiwithdhruv.com
+💻 Source code: https://github.com/aiagentwithdhruv/laptop-finder-ai
+📐 AI coding rules: https://github.com/aiagentwithdhruv/ai-coding-rules
+☁️ AWS reference: https://github.com/aiagentwithdhruv/conversa-ai
+🌐 Portfolio: https://aiwithdhruv.com
 ```
 
----
-
-## Thumbnail Prompt (for YouTube)
-
-```
-Cinematic photo of a South Asian man wearing black t-shirt and glasses,
-sitting at a MacBook Pro in a dark room, screen glowing with code.
-Split screen showing a sleek dark-themed web app on the right side.
-Text overlay: "7 PROMPTS → FULL AI APP"
-Purple and teal neon lighting, dark background, moody tech aesthetic.
-Hyperrealistic, 4K, shallow depth of field.
-```
-
----
-
-## Hashtag Sets
-
-**LinkedIn:**
-```
-#AIEngineering #ClaudeCode #BuildInPublic #RAG #FullStack #AIAutomation #SoftwareArchitecture #OpenSource
-```
-
-**Twitter/X:**
-```
-#AI #ClaudeCode #RAG #BuildInPublic #OpenSource #WebDev #n8n
-```
-
-**YouTube Tags:**
+**Tags:**
 ```
 claude code, ai coding, rag tutorial, fastapi nextjs, pgvector, ai product, build with ai, claude code tutorial, ai engineering, laptop recommendation ai, deploy for free, n8n automation, vercel render deployment
 ```
 
 ---
 
-## Cross-Link Strategy
+## YouTube Thumbnail Prompt (thumbnail-generator skill)
 
-Every piece of content should link to:
-1. **Live demo:** laptopfinder.aiwithdhruv.com
-2. **Source code:** github.com/aiagentwithdhruv/laptop-finder-ai
-3. **Engineering rules:** github.com/aiagentwithdhruv/ai-coding-rules
-4. **Portfolio:** aiwithdhruv.com
-5. **AWS reference:** github.com/aiagentwithdhruv/conversa-ai (for production deployment)
+**Visual Hook:** #3 Pipeline Flow (Blue Metallic palette)
+**Text Overlay:** "7 PROMPTS → **FULL AI APP**"
+
+```
+Wide-angle cinematic still, futuristic workspace with brushed aluminum and chrome surfaces. Young Indian male developer with short hair, trimmed beard, and glasses, wearing a plain black t-shirt, sitting confidently at natural wooden desk with arms resting on keyboard. The MacBook Pro screen shows a dark-themed AI chat interface with laptop recommendations, streaming response with emoji headings and structured specs. Floating around him: frosted glass UI panels showing the LaptopFinder homepage (dark theme, cyan accents, "Find Your Perfect Laptop" hero text) and a browse page with laptop cards grid. Above: a holographic pipeline "PROMPT → CLAUDE CODE → DEPLOY" with green checkmarks on each step, connected by glowing cyan arrows. On the left side, clean vertical badge-style labels: Next.js, FastAPI, pgvector, GPT-4o, Vercel — stacked neatly with colored brand icons. Small floating code snippet card bottom-right showing Python RAG pipeline code on frosted glass with teal neon border. Dark moody room with warm ambient light, bookshelf with plants softly blurred in background. Natural skin tones, warm room lighting with teal and gunmetal silver-blue neon accents only from the floating panels. Clean composition with breathing room between elements. Photorealistic, 8K, sharp focus, shallow depth of field, DSLR quality, cinematic color grading, 16:9 YouTube thumbnail ratio.
+```
+
+**Alt Prompt (LinkedIn 4:5):**
+```
+Cinematic portrait, dark moody workspace. Young Indian male developer with short hair, trimmed beard, and glasses, wearing a plain black t-shirt, looking at MacBook Pro screen showing a dark-themed laptop recommendation chat with structured AI responses. Single frosted glass panel floating behind him showing the LaptopFinder browse page with laptop cards. Small vertical badge list on left edge: Next.js, FastAPI, pgvector. Dark navy background, teal and gunmetal silver-blue ambient lighting, rim light from behind, cinematic shallow depth of field, 8K, sharp focus, hyperrealistic, 4:5 ratio.
+```
+
+---
+
+## Hand-Drawn Diagram Prompt (handdrawn-diagram skill — paste in Gemini)
+
+```
+Hand-drawn whiteboard infographic on white lined notebook paper, sitting on a natural wooden desk surface visible at the edges. Black marker lines, cyan (#00D4FF) marker highlights, yellow highlighter on key numbers. Real marker ink texture, natural paper grain. Photo of a real whiteboard after a brainstorming session. 16:9 aspect ratio.
+
+=== TOP TITLE BAR ===
+Hand-written bold title: "LaptopFinder AI — Full-Stack RAG Product"
+Below it: "Built with 7 Prompts. Deployed for $0/month." with yellow highlight on "7 Prompts" and "$0/month"
+Cyan marker underline stroke under the main title.
+TOP-RIGHT: "AiwithDhruv" in bold cyan marker inside a hand-drawn rounded rectangle badge. Smaller text below: "youtube | github | linkedin"
+
+=== LEFT COLUMN — "Tech Stack" ===
+Header: "Tech Stack" inside a hand-drawn box
+Checklist with small hand-drawn logos next to each:
+☑ Next.js 15 — small React logo
+☑ FastAPI — small Python snake logo
+☑ PostgreSQL + pgvector — small elephant logo
+☑ OpenAI GPT-4o — small OpenAI logo
+☑ Tailwind CSS — small wind logo
+☑ Vercel + Render — small V and R logos
+
+=== CENTER — "How It Works" (largest section) ===
+Header: "How It Works" with a circle around it
+
+Flowchart with boxes connected by hand-drawn arrows:
+[BOX 1]: "User Asks Question" — subtitle: "Best laptop for programming?"
+↓ arrow
+[BOX 2]: "Embed Query" — subtitle: "text-embedding-3-small" with small OpenAI logo
+↓ arrow
+[BOX 3]: "pgvector Search" — subtitle: "Top 8 similar laptops" with small elephant logo
+↓ arrow
+[BOX 4]: "Stream GPT-4o" — subtitle: "Structured markdown response" with green checkmark badge
+
+=== FLASH CARDS scattered around like sticky notes, tilted at slight angles ===
+
+Yellow sticky note (tilted, near top-right):
+"AI-Powered Chat"
+"Ask anything about laptops"
+"Streaming responses via SSE"
+Small chat bubble doodle
+
+Light Blue sticky note (tilted, near center-right):
+"Browse & Filter"
+"30+ laptops, 6 categories"
+"Brand, price, specs filters"
+Small laptop doodle
+
+Pink sticky note (tilted, near bottom-left):
+"Side-by-Side Compare"
+"Up to 4 laptops"
+"Highlighted winners per spec"
+Small comparison table doodle
+
+Light Green sticky note (tilted, near center-left):
+"n8n Keep-Alive"
+"Pings API every 14 min"
+"Zero cold starts on free tier"
+Small clock/gear doodle
+
+Light Purple sticky note (tilted, near top-center):
+"CLAUDE.md"
+"15 engineering rules"
+"Production-grade AI code"
+Small file/document doodle
+
+Some flash cards have paper clip or tape marks holding them on.
+
+=== RIGHT COLUMN — "The App" ===
+Header: "The App"
+Hand-drawn browser window mockup showing:
+— Dark-themed homepage with "Find Your Perfect Laptop" title
+— Category cards row (Ultrabook, Gaming, Workstation, Business)
+— "Ask AI" cyan button
+— URL bar showing "laptopfinder.aiwithdhruv.com"
+
+=== BOTTOM LEFT — Architecture Diagram ===
+Three-layer architecture boxes connected by arrows:
+[Routes] → "HTTP only"
+↓ arrow
+[Services] → "Business logic"
+↓ arrow
+[Repos] → "Database access"
+Side label: "Clean Architecture" with cyan underline
+Small logos: FastAPI, SQLAlchemy, Pydantic next to each layer
+
+=== BOTTOM CENTER — Stats Row ===
+Three items in a row, each circled with yellow highlight:
+"$0/month"    "7 Prompts"    "30+ Laptops"
+Small star doodles around the stats
+
+=== BOTTOM RIGHT — Author + Branding ===
+"AiwithDhruv" with cyan lightning bolt
+"@aiwithdhruv" and "github.com/aiagentwithdhruv"
+"AD" monogram in a hand-drawn circle
+
+=== AMBIENT DETAILS ===
+- Coffee ring stain near bottom-left (subtle)
+- Paper clips on 1-2 flash cards
+- Tape marks on corners of some sticky notes
+- Blue pen lying on the desk
+- Small doodle arrows and stars in empty spaces
+- Wooden desk texture at all edges
+- Faint "AiwithDhruv" watermark diagonally across center in light grey
+
+=== STYLE — CRITICAL ===
+- Real black marker on white paper — authentic hand-drawn feel
+- Slightly imperfect handwriting but always readable
+- Cyan for headers, connections, branding
+- Yellow highlighter for numbers and stats
+- Pastel colored sticky notes at slight angles
+- Small recognizable tech logos hand-drawn next to every tool
+- Everything hand-drawn — NO computer fonts
+- Clean enough to read on a phone screen
+```
+
+---
+
+## Carousel (LinkedIn/Instagram) — 7 Slides
+
+```
+Slide 1: "I Built a Full AI Product With 7 Prompts" [app screenshot]
+Slide 2: "The Stack" — Next.js 15, FastAPI, PostgreSQL + pgvector, GPT-4o, $0/month
+Slide 3: "Clean Architecture" — Routes → Services → Repos (no spaghetti)
+Slide 4: "RAG Pipeline" — Embed → pgvector search → Stream GPT-4o
+Slide 5: "The Secret" — CLAUDE.md with 15 rules = production-grade AI code
+Slide 6: "Deployed for $0" — Vercel + Render + n8n keep-alive
+Slide 7: "Open Source" — github.com/aiagentwithdhruv/laptop-finder-ai
+```
