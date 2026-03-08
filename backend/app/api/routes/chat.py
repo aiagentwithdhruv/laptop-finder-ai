@@ -23,8 +23,36 @@ async def chat(request: ChatRequest, db: AsyncSession = Depends(get_db)):
             conversation_history=request.conversation_history,
         ),
         media_type="text/event-stream",
-        headers={"Cache-Control": "no-cache", "Connection": "keep-alive"},
+        headers={"Cache-Control": "no-cache", "Connection": "keep-alive", "X-Accel-Buffering": "no"},
     )
+
+
+@router.get("/debug")
+async def debug_chat(db: AsyncSession = Depends(get_db)):
+    """Quick diagnostic — tests each chat component."""
+    results = {}
+    from app.config import get_settings
+    settings = get_settings()
+    results["openai_key_set"] = bool(settings.openai_api_key)
+    results["openai_key_prefix"] = settings.openai_api_key[:8] + "..." if settings.openai_api_key else "EMPTY"
+
+    try:
+        from app.rag.embeddings import get_embedding
+        emb = await get_embedding("test")
+        results["embedding"] = f"OK (dim={len(emb)})"
+    except Exception as e:
+        results["embedding"] = f"FAIL: {e}"
+
+    try:
+        from app.repositories.embedding_repo import EmbeddingRepository
+        repo = EmbeddingRepository(db)
+        emb = await get_embedding("gaming laptop")
+        chunks = await repo.similarity_search(emb, top_k=2)
+        results["retrieval"] = f"OK ({len(chunks)} chunks)"
+    except Exception as e:
+        results["retrieval"] = f"FAIL: {e}"
+
+    return results
 
 
 @router.post("/sessions")
