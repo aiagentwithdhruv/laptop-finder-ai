@@ -47,10 +47,10 @@ class EmbeddingRepository:
 
         sql = text(f"""
             SELECT id, laptop_id, chunk_type, content, metadata,
-                   1 - (embedding <=> :embedding::vector) AS similarity
+                   1 - (embedding <=> CAST(:embedding AS vector)) AS similarity
             FROM laptop_embeddings
             WHERE 1=1 {where_clause}
-            ORDER BY embedding <=> :embedding::vector
+            ORDER BY embedding <=> CAST(:embedding AS vector)
             LIMIT :top_k
         """)
 
