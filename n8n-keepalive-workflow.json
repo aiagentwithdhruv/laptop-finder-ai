@@ -1,0 +1,51 @@
+{
+  "name": "Render Keep-Alive - LaptopFinder",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 14
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger",
+      "name": "Every 14 Minutes",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://laptop-finder-api.onrender.com/api/v1/laptops?limit=1",
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "id": "http-request",
+      "name": "Ping Render API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [460, 300]
+    }
+  ],
+  "connections": {
+    "Every 14 Minutes": {
+      "main": [
+        [
+          {
+            "node": "Ping Render API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

@@ -64,6 +64,8 @@ I teach RAG, agents, full-stack AI, and deployment at euron.one — join 2200+ e
 ## First Comment (Post Immediately After)
 
 ```
+📝 Full deep-dive article (architecture, prompts, deployment) → [paste LinkedIn article URL here]
+
 All links:
 
 🔗 Live demo → laptopfinder.aiwithdhruv.com
@@ -347,6 +349,310 @@ Small star doodles around the stats
 - Small recognizable tech logos hand-drawn next to every tool
 - Everything hand-drawn — NO computer fonts
 - Clean enough to read on a phone screen
+```
+
+---
+
+## LinkedIn Article (Long-Form — Publish on LinkedIn)
+
+**Title:** How I Built a Full-Stack AI Product With 7 Prompts and Deployed It for $0
+
+**Subtitle:** The architecture, the prompts, the rules, and the deployment — everything I used to build LaptopFinder AI with Claude Code.
+
+**Cover Image:** Use the hand-drawn architecture diagram (architecture-handdrawn.png)
+
+**After publishing:** Add the article link to the First Comment above.
+
+```
+I built a full-stack AI product in one session. No team. No designer. No project manager. Just me, Claude Code, and a 160-line instruction file.
+
+The result: LaptopFinder AI — an AI-powered laptop recommendation engine that lets you ask questions in plain English like "best laptop for programming under $1500" and get structured, spec-by-spec recommendations powered by a RAG pipeline.
+
+Live demo: laptopfinder.aiwithdhruv.com
+Source code: github.com/aiagentwithdhruv/laptop-finder-ai
+
+In this article, I'll walk through exactly how I built it — the architecture, the 7 prompts I used, the engineering rules that made the AI write production-grade code, and how I deployed everything for $0/month.
+
+
+## What LaptopFinder AI Does
+
+[Insert: homepage screenshot — home-page.jpg]
+
+Four core features:
+
+1. AI-Powered Chat — Ask anything about laptops in plain English. The AI searches a database of 30+ laptops using vector similarity, then streams a structured response with specs, pros, cons, and trade-offs.
+
+2. Browse & Filter — Browse all laptops with filters for brand, category, price range, and specs. Six categories: Ultrabook, Gaming, Workstation, Business, Budget, and Creative.
+
+3. Laptop Detail Pages — Every laptop has a dedicated page with full specs, reviews, ratings, and a "Similar Laptops" section powered by pgvector similarity search.
+
+4. Side-by-Side Comparison — Select up to 4 laptops and compare them spec-by-spec. The best value in each category gets highlighted.
+
+[Insert: AI chat screenshot — ai-chat.jpg]
+
+
+## The Tech Stack
+
+Here's what powers the app:
+
+Frontend:
+• Next.js 15 (App Router) + TypeScript
+• Tailwind CSS (dark theme)
+• React Markdown for AI response rendering
+• Deployed on Vercel
+
+Backend:
+• FastAPI (async Python)
+• SQLAlchemy + asyncpg (async database access)
+• Pydantic v2 (validation + schemas)
+• Alembic (database migrations)
+• Deployed on Render (free tier)
+
+Database:
+• PostgreSQL 16 with pgvector extension
+• Vector similarity search (cosine distance)
+• Hosted on Render (free tier)
+
+AI:
+• OpenAI GPT-4o (answer generation via streaming)
+• text-embedding-3-small (1536-dim embeddings)
+• Server-Sent Events (SSE) for real-time streaming
+
+
+## The Architecture — Why It's Not Spaghetti Code
+
+[Insert: hand-drawn architecture diagram — architecture-handdrawn.png]
+
+Most AI-generated code is a mess. Everything in one file. No separation. No error handling. Breaks the moment you try to deploy.
+
+This project is different because of clean 3-layer architecture:
+
+Layer 1: Routes (HTTP only)
+Routes handle requests and responses. Zero business logic. They just validate input, call a service, and return the result.
+
+Layer 2: Services (Business logic)
+All the actual logic — RAG retrieval, embedding generation, recommendation scoring, comparison logic — lives here. Services don't know about HTTP. They don't know about database queries. They just process data.
+
+Layer 3: Repositories (Database access)
+All SQL, ORM queries, and pgvector searches live here. Repositories don't know about business rules. They just fetch and store data.
+
+Why this matters:
+• Each layer can be tested independently
+• You can swap the database without touching business logic
+• You can swap the API framework without rewriting services
+• It's the same architecture used by teams at scale
+
+
+## The RAG Pipeline — How AI Chat Works
+
+This is the most interesting part. When a user asks "best laptop for video editing under $2000", here's what happens:
+
+Step 1: Embed the query
+The user's question gets converted into a 1536-dimensional vector using OpenAI's text-embedding-3-small model.
+
+Step 2: Vector search
+pgvector searches the database using cosine similarity and returns the top 8 most relevant laptops. Each laptop was pre-embedded during data ingestion — combining name, brand, category, specs, and use cases into a single text chunk.
+
+Step 3: Build context
+The top 8 laptop results get formatted into structured context with full specs, prices, ratings, and pros/cons.
+
+Step 4: Stream GPT-4o
+The context + user question + a carefully crafted system prompt get sent to GPT-4o. The response streams back via Server-Sent Events (SSE), so the user sees the answer typing out in real time.
+
+The system prompt is critical. It tells GPT-4o to:
+• Always respond with structured markdown (### headings, tables, emoji labels)
+• Include a comparison table when multiple laptops match
+• End with a verdict section picking the best option
+• Never hallucinate specs — only use the provided context
+• Handle "no match" cases gracefully
+
+The exact system prompt is in the repo: backend/app/rag/prompts.py
+
+
+## The 7 Prompts That Built Everything
+
+Here are the exact natural language prompts I gave Claude Code:
+
+Prompt 1 — Architecture:
+"Build a laptop recommendation system with AI chat. FastAPI + PostgreSQL + pgvector. Next.js frontend. Clean architecture — routes → services → repos."
+
+Result: Complete project structure with 3-layer backend, Next.js 15 frontend, and all config files.
+
+Prompt 2 — Database:
+"Create the schema with laptops, specs, reviews, embeddings. Seed 30 laptops across 6 categories."
+
+Result: Alembic migrations, SQLAlchemy models, and a full JSON seed file with realistic specs for 30+ laptops.
+
+Prompt 3 — RAG Pipeline:
+"Chunk laptop data, embed with text-embedding-3-small, store in pgvector, retrieve top 8, stream GPT-4o via SSE."
+
+Result: 5 files — embedding service, retrieval service, RAG service, streaming endpoint, and system prompt.
+
+Prompt 4 — Frontend:
+"Home with hero + categories. Browse with filters. Detail page. AI chat with streaming. Comparison page."
+
+Result: Full Next.js 15 app with TypeScript, Tailwind, and dark theme. All 5 pages with loading states and error handling.
+
+Prompt 5 — Deploy:
+"Deploy to Vercel + Render free tier. Custom domain."
+
+Result: render.yaml blueprint, environment variable configs, and DNS setup instructions.
+
+Prompt 6 — Keep-Alive:
+"Render spins down after 15 min. Create n8n workflow to ping every 14 min."
+
+Result: Complete n8n workflow JSON — 2 nodes, import and activate.
+
+Prompt 7 — Polish:
+"Chat responses are unstructured. Fix the prompt + CSS."
+
+Result: Rewrote the system prompt for structured markdown output. Added custom CSS for dark-themed markdown rendering.
+
+7 prompts. Full product. Deployed and live.
+
+
+## The Secret — CLAUDE.md (15 Engineering Rules)
+
+Here's what most people miss about AI coding: the AI is only as good as your instructions.
+
+Without rules, Claude Code writes prototype-quality code — everything in one file, no error handling, hardcoded values, no types.
+
+With a CLAUDE.md file containing 15 engineering rules, it writes production-grade code with clean architecture, typed schemas, async I/O, centralized config, and proper error handling.
+
+The 15 rules cover:
+• Routes handle HTTP only (zero business logic)
+• Services handle all business logic
+• Repositories handle all database access
+• Pydantic validates every input and output
+• Config is centralized, never hardcoded
+• Use async I/O everywhere
+• RESTful naming with API versioning
+• Consistent error response structure
+• Structured logging on critical paths
+• Never hardcode secrets or environment-specific URLs
+• Migrations for all schema changes
+• Separate RAG ingestion from answer generation
+• Health endpoints for every service
+• Type hints everywhere
+• Parameterized queries, no N+1 patterns
+
+I open-sourced these rules as a standalone repo:
+github.com/aiagentwithdhruv/ai-coding-rules
+
+It includes:
+• 15 .mdc rules for Cursor
+• Same rules as CLAUDE.md for Claude Code
+• 9 project doc templates (PRD, Architecture, API Spec, DB Schema, Deployment)
+• One-liner install script
+
+The difference between "AI can't write real code" and "AI wrote my entire product" is literally a 160-line instruction file.
+
+
+## Deploying for $0/Month
+
+The entire app runs for free:
+
+Frontend (Vercel — Free):
+• Push to GitHub → auto-deploys
+• Custom domain: laptopfinder.aiwithdhruv.com
+• Edge network, SSL, preview deploys — all included
+• Setup: 60 seconds
+
+Backend + Database (Render — Free):
+• render.yaml blueprint → one-click deploy
+• PostgreSQL 16 with pgvector extension
+• Python backend with auto-builds
+• Free tier: 750 hours/month, 256MB RAM
+
+The one catch: Render's free tier spins down after 15 minutes of inactivity. First request after spin-down takes 30-50 seconds.
+
+The fix: n8n keep-alive workflow.
+
+
+## The n8n Keep-Alive Trick (Zero Cold Starts)
+
+n8n is a free, self-hostable workflow automation tool. I created a 2-node workflow:
+
+Node 1: Schedule Trigger — fires every 14 minutes
+Node 2: HTTP Request — pings the backend health endpoint
+
+That's it. The API never spins down. Zero cold starts. Free.
+
+The workflow JSON is in the repo — import it into n8n and activate.
+
+Other n8n use cases I use with this stack:
+• Daily database backup alerts
+• Weekly analytics digest (most searched laptops, popular queries)
+• Price monitoring (scrape and update laptop prices)
+• Uptime monitoring with Telegram/Slack alerts
+• Nightly embedding refresh for new products
+• SEO ping on content updates
+
+
+## What If You Need More Scale?
+
+If free tier isn't enough, here are the options I compared:
+
+$0/month — Vercel + Render free tier + n8n keep-alive (what I use)
+$7/month — Render Starter (no cold starts, 1GB RAM)
+$20/month — Railway Pro (auto-scaling, managed Postgres)
+$25/month — DigitalOcean (VPS + managed DB)
+$35-50/month — AWS ECS Fargate (production-grade, auto-scaling)
+
+For the AWS option, I have a full deployment guide with ECS Fargate, ALB, RDS, and service-by-service cost breakdown in my Conversa AI repo:
+github.com/aiagentwithdhruv/conversa-ai
+
+
+## The Numbers
+
+• Total hosting cost: $0/month
+• AI cost per query: ~$0.01 (GPT-4o streaming)
+• Laptops in database: 30+ across 6 categories
+• Backend response time: <2s (with n8n keep-alive active)
+• Time to build: One session with Claude Code
+• Lines in CLAUDE.md: 160
+
+
+## Everything Is Open Source
+
+Live demo: laptopfinder.aiwithdhruv.com
+Source code: github.com/aiagentwithdhruv/laptop-finder-ai
+AI coding rules: github.com/aiagentwithdhruv/ai-coding-rules
+AWS deployment reference: github.com/aiagentwithdhruv/conversa-ai
+Portfolio: aiwithdhruv.com
+
+The repo includes:
+• Full README with architecture diagram and screenshots
+• The exact RAG system prompt powering the AI chat
+• Free deployment guide (Vercel + Render + n8n)
+• Deployment cost comparison (6 options from $0 to $50/month)
+• n8n workflow JSON — import and activate
+• AWS ECS Fargate guide with cost breakdown
+
+Star the repos if this was useful.
+
+
+## Want to Build AI Systems Like This?
+
+I teach RAG, agents, full-stack AI, and production deployment at euron.one.
+
+2200+ engineers enrolled. From architecture to deployment. Production-grade.
+
+The era of "AI can't write production code" is over. You just need better instructions.
+
+— Dhruv | aiwithdhruv.com
+```
+
+**Formatting notes for LinkedIn article editor:**
+- Add H2 headers for each `##` section
+- Bold key terms and tool names
+- Insert screenshots at the marked `[Insert: ...]` points
+- Add hyperlinks for all URLs (LinkedIn articles support clickable links)
+- The hand-drawn architecture diagram makes a great cover image
+
+**After publishing, update the First Comment to include:**
+```
+📝 Full deep-dive article → [paste LinkedIn article URL here]
 ```
 
 ---
